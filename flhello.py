@@ -9,7 +9,7 @@ def hello():
 
 @app.route('/<word>')
 def google(word):
-    return redirect('http://google.com/%s' % word)
+    return redirect('http://google.com/?q=%s' % word)
 
 if __name__ == '__main__':
     app.run()
