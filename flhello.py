@@ -11,17 +11,20 @@ db = {
 }
 
 hello_html = '''<ul>
-<li> flask %(flask)s
-<li> jinja %(jinja)s
-<li> werkzeug %(werkzeug)s
+<li> %(flask)s
+<li> %(jinja)s
+<li> %(werkzeug)s
 </ul>'''
+
+def a(word, uri):
+    return "<a href='%s'>%s</a>" % (uri, word)
 
 @app.route('/')
 def hello():
     return hello_html % {
-            'flask' :    url_for('redir', id=0),
-            'jinja' :    url_for('redir', id=1),
-            'werkzeug' : url_for('redir', id=2) }
+            'flask' :    a('flask',    url_for('redir', id=0)),
+            'jinja' :    a('jinja',    url_for('redir', id=1)),
+            'werkzeug' : a('werkzeug', url_for('redir', id=2)) }
 
 @app.route('/<int:id>')
 def redir(id):
