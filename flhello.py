@@ -28,7 +28,7 @@ def hello():
 
 @app.route('/<int:id>')
 def redir(id):
-    uri = db.get(id) or 'http://www.pocoo.org/'
+    uri = db.get(id) or url_for('hello')
     return redirect(uri)
 
 if __name__ == '__main__':
