@@ -26,7 +26,7 @@ def hello():
             'jinja' :    a('jinja',    url_for('redir', id=1)),
             'werkzeug' : a('werkzeug', url_for('redir', id=2)) }
 
-@app.route('/<int:id>')
+@app.route('/_<int:id>')
 def redir(id):
     uri = db.get(id) or url_for('hello')
     return redirect(uri)
