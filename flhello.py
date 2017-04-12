@@ -10,7 +10,8 @@ sql_get_list = 'select * from uritab'
 sql_create = 'create table uritab(id integer primary key autoincrement, uri text)'
 sql_insert = 'insert into uritab values(null, ?)'
 
-hello_html  = '''<h1>Short URI demo</h1>
+hello_html = '''<title>Short URI demo</title>
+<h1>Short URI demo</h1>
 <form method='post'>
 <input name='uri'>
 <input type='submit'>
