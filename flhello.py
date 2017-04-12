@@ -6,6 +6,7 @@ from flask import url_for
 import sqlite3
 
 sql_get = 'select uri from uritab where id = ?'
+sql_get_list = 'select * from uritab'
 sql_create = 'create table uritab(id integer primary key autoincrement, uri text)'
 sql_insert = 'insert into uritab values(null, ?)'
 
@@ -16,13 +17,12 @@ db = [
 ]
 default_uri = 'http://www.pocoo.org/'
 
-get_html  = '''<h1>Hello</h1>
+hello_html  = '''<h1>Short URI demo</h1>
 <form method='post'>
 <input name='uri'>
 <input type='submit'>
 </form>
 '''
-post_html = '<h1>Hello</h1><dl><dt>uri</dt><dd>%s</dd></dl>'
 
 class Database:
     def __init__(self, filename):
@@ -36,6 +36,13 @@ class Database:
         if not ret:
             return default_uri
         return ret[0]
+
+    def get_list(self):
+        conn = sqlite3.connect(self.filename)
+        cur = conn.cursor()
+        ret = cur.execute(sql_get_list).fetchall()
+        conn.close()
+        return ret
 
     def create(self):
         conn = sqlite3.connect(self.filename)
@@ -67,12 +74,13 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def hello():
-    if request.method == 'GET':
-        return get_html
-    else:
-        d = Database('db')
+    d = Database('db')
+    if request.method == 'POST':
         d.append(request.form['uri'])
-        return Markup(post_html) % request.form['uri']
+    s = Markup('<ul>')
+    for i, u in d.get_list():
+        s += Markup("<li><a href='%s'>%d -> %s</a>") % (url_for('redir', id=i), i, u)
+    return Markup(hello_html) + s
 
 @app.route('/_<int:id>')
 def redir(id):
