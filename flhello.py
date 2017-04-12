@@ -14,7 +14,9 @@ sql_insert = 'insert into uritab values(null, ?)'
 hello_html = '''<title>Short URI demo</title>
 <h1>Short URI demo</h1>
 <form method='post'>
+input URI:
 <input name='uri'>
+and press button:
 <input type='submit'>
 </form>
 '''
