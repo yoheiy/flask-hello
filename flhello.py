@@ -1,4 +1,6 @@
 from flask import Flask
+from flask import Markup
+from flask import request
 from flask import redirect
 from flask import url_for
 import sqlite3
@@ -14,7 +16,13 @@ db = [
 ]
 default_uri = 'http://www.pocoo.org/'
 
-hello_html = '<h1>Hello</h1>'
+get_html  = '''<h1>Hello</h1>
+<form method='post'>
+<input name='uri'>
+<input type='submit'>
+</form>
+'''
+post_html = '<h1>Hello</h1><dl><dt>uri</dt><dd>%s</dd></dl>'
 
 class Database:
     def __init__(self, filename):
@@ -40,6 +48,13 @@ class Database:
         finally:
             conn.close()
 
+    def append(self, uri):
+        conn = sqlite3.connect(self.filename)
+        cur = conn.cursor()
+        cur.execute(sql_insert, (uri,))
+        conn.commit()
+        conn.close()
+
     def insert_sample(self):
         conn = sqlite3.connect(self.filename)
         cur = conn.cursor()
@@ -50,9 +65,14 @@ class Database:
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def hello():
-    return hello_html
+    if request.method == 'GET':
+        return get_html
+    else:
+        d = Database('db')
+        d.append(request.form['uri'])
+        return Markup(post_html) % request.form['uri']
 
 @app.route('/_<int:id>')
 def redir(id):
