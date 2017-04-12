@@ -10,13 +10,6 @@ sql_get_list = 'select * from uritab'
 sql_create = 'create table uritab(id integer primary key autoincrement, uri text)'
 sql_insert = 'insert into uritab values(null, ?)'
 
-db = [
-    'http://flask.pocoo.org/',
-    'http://jinja.pocoo.org/',
-    'http://werkzeug.pocoo.org/',
-]
-default_uri = 'http://www.pocoo.org/'
-
 hello_html  = '''<h1>Short URI demo</h1>
 <form method='post'>
 <input name='uri'>
@@ -62,14 +55,6 @@ class Database:
         conn.commit()
         conn.close()
 
-    def insert_sample(self):
-        conn = sqlite3.connect(self.filename)
-        cur = conn.cursor()
-        for i in db:
-           cur.execute(sql_insert, (i,))
-        conn.commit()
-        conn.close()
-
 app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -92,7 +77,6 @@ def redir(id):
 def db_create():
     d = Database('db')
     d.create()
-    d.insert_sample()
     uri = url_for('hello')
     return redirect(uri)
 
