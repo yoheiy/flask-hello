@@ -3,6 +3,7 @@ from flask import Markup
 from flask import request
 from flask import redirect
 from flask import url_for
+from flask import abort
 import sqlite3
 
 sql_get = 'select uri from uritab where id = ?'
@@ -28,7 +29,7 @@ class Database:
         ret = cur.execute(sql_get, (id,)).fetchone()
         conn.close()
         if not ret:
-            return url_for('hello')
+            return None
         return ret[0]
 
     def get_list(self):
@@ -71,7 +72,7 @@ def hello():
 @app.route('/_<int:id>')
 def redir(id):
     d = Database('db')
-    uri = d.get(id) or url_for('hello')
+    uri = d.get(id) or abort(404)
     return redirect(uri)
 
 @app.route('/create')
