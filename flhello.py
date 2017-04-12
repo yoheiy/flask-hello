@@ -28,7 +28,7 @@ class Database:
         ret = cur.execute(sql_get, (id,)).fetchone()
         conn.close()
         if not ret:
-            return default_uri
+            return url_for('hello')
         return ret[0]
 
     def get_list(self):
